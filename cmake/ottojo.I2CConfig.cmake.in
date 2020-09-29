@@ -1,0 +1,14 @@
+get_filename_component(OTTOJOI2C_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${OTTOJOI2C_CMAKE_DIR})
+
+
+find_dependency(Microsoft.GSL)
+find_dependency(fmt)
+
+if (NOT TARGET ottojo.I2C::I2C)
+    include("${OTTOJOI2C_CMAKE_DIR}/ottojo.I2CTargets.cmake")
+endif ()
+
+set(I2C_lIBRARIES ottojo.I2C::I2C)
