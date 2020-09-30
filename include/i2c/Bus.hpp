@@ -8,11 +8,12 @@
 #ifndef I2C_BUS_HPP
 #define I2C_BUS_HPP
 
-#include <filesystem>
-#include <fstream>
-#include <mutex>
-#include <array>
-#include <unistd.h>
+#include <unistd.h>    // for read, write
+#include <array>       // for array
+#include <cstddef>     // for byte, size_t
+#include <filesystem>  // for path
+#include <mutex>       // for mutex, lock_guard
+#include <stdexcept>   // for runtime_error
 
 
 namespace i2c {
@@ -20,11 +21,6 @@ namespace i2c {
             using FD = int;
         public:
             explicit Bus(const std::filesystem::path &path);
-
-            Bus(const Bus &) = delete;
-
-            Bus &operator=(const Bus &) = delete;
-
 
         private:
             FD fileDescriptor;
@@ -56,7 +52,7 @@ namespace i2c {
 
                     std::byte readFrom(std::byte reg) {
                         write(reg);
-                        return read<1>()[0];
+                        return read();
                     };
 
                     template<size_t N>

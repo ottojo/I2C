@@ -8,9 +8,12 @@
 #ifndef I2C_PCA9685_HPP
 #define I2C_PCA9685_HPP
 
-#include "i2c/Bus.hpp"
-#include <gsl/gsl>
-#include "i2c/byteLiteral.hpp"
+#include <stdint.h>             // for uint16_t
+#include <cstddef>              // for byte
+#include <gsl/pointers>         // for not_null
+#include <memory>               // for shared_ptr
+#include "i2c/byteLiteral.hpp"  // for operator""_byte
+#include "Bus.hpp"              // IWYU pragma: keep
 
 namespace i2c {
     class PCA9685 {
@@ -34,8 +37,8 @@ namespace i2c {
             void setAllOff();
 
             static constexpr int DEFAULT_ADDRESS = 0x40;
-
-            ~PCA9685();
+            static constexpr double OSC_FREQ = 25'000'000.0;
+            static constexpr int COUNTER_MAX = 4096;
 
         private:
             const int address;
@@ -56,9 +59,7 @@ namespace i2c {
             }
 
 
-            static constexpr std::byte mode1(bool restart, bool extclk, bool ai, bool sleep,
-                                             bool sub1 = false, bool sub2 = false, bool sub3 = false,
-                                             bool allcall = false);
+            static constexpr std::byte mode1(bool restart, bool extclk, bool ai, bool sleep);
 
 
             void setPrescaler(std::byte prescaler);

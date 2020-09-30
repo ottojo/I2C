@@ -1,0 +1,1 @@
+Checks: '*,-fuchsia-default-arguments-calls,-modernize-use-trailing-return-type,-llvmlibc-*'

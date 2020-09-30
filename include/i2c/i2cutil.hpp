@@ -13,11 +13,11 @@
 
 namespace i2c::util {
     constexpr std::byte highByte(const uint16_t &val) {
-        return std::byte(val >> 8u);
+        return std::byte(val >> 8U);
     }
 
     constexpr std::byte lowByte(const uint16_t &val) {
-        return std::byte(val & 0xFFu);
+        return std::byte(val & 0xFFU);
     }
 }
 #endif //I2C_I2CUTIL_HPP

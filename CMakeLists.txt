@@ -5,20 +5,40 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(DEFAULT_COMPILE_OPTIONS -Wall -Wextra -Wpedantic -Werror -O3 -march=native -mtune=native)
 
+include(FetchContent)
 
-find_package(fmt REQUIRED)
-find_package(Microsoft.GSL REQUIRED)
+FetchContent_Declare(
+        gsl
+        GIT_REPOSITORY https://github.com/microsoft/GSL
+        GIT_TAG v3.1.0
+)
+FetchContent_MakeAvailable(gsl)
+
 
 add_library(I2C src/Bus.cpp src/PCA9685.cpp src/ServoHat.cpp)
 target_include_directories(I2C
         PUBLIC
         $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_compile_features(I2C PRIVATE cxx_std_17)
-target_link_libraries(I2C PUBLIC stdc++fs Microsoft.GSL::GSL PRIVATE fmt::fmt)
+target_link_libraries(I2C PUBLIC stdc++fs Microsoft.GSL::GSL)
 target_compile_options(I2C PRIVATE ${DEFAULT_COMPILE_OPTIONS})
+
+# Run include-what-you-use while compiling if it is found on the system
+find_program(IWYU include-what-you-use)
+if (IWYU)
+    set_target_properties(I2C PROPERTIES
+            CXX_INCLUDE_WHAT_YOU_USE "include-what-you-use;-Xiwyu;--no_fwd_decls;-Xiwyu;--cxx17ns;-Xiwyu;--quoted_includes_first")
+endif ()
+
+# Run clang-tidy while compiling if it is found on the system
+find_program(CLANG-TIDY clang-tidy REQUIRED)
+if (CLANG-TIDY)
+    set_target_properties(I2C PROPERTIES
+            CXX_CLANG_TIDY "clang-tidy")
+endif ()
+
+set_target_properties(I2C PROPERTIES CXX_LINK_WHAT_YOU_USE TRUE)
 
 # Install
 include(GNUInstallDirs)

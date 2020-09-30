@@ -1,10 +1,7 @@
 #include "i2c/Bus.hpp"
 #include <thread>
-#include "i2c/ServoHat.hpp"
-#include <fmt/core.h>
 #include "i2c/PCA9685.hpp"
 int main(){
-    fmt::print("Starting\n");
 
     i2c::PCA9685 p{std::make_shared<i2c::Bus>("/dev/i2c-1")};
     p.setOnTimeGlobal(0);

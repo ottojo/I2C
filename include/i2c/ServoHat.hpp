@@ -8,7 +8,11 @@
 #ifndef I2C_SERVOHAT_HPP
 #define I2C_SERVOHAT_HPP
 
-#include "i2c/PCA9685.hpp"
+#include <cstdint>          // for uint16_t
+#include <gsl/pointers>     // for not_null
+#include <memory>           // for shared_ptr
+#include "i2c/Bus.hpp"      // IWsdfYU pragma: keep
+#include "i2c/PCA9685.hpp"  // for PCA9685
 
 namespace i2c {
     class ServoHat {
@@ -19,12 +23,13 @@ namespace i2c {
 
             void turnAllOff();
 
+            ~ServoHat();
+
         private:
 
             int frequency;
 
             [[nodiscard]] constexpr uint16_t counts(unsigned int microseconds) const {
-                // TODO fix
                 return 4095 * (microseconds / 1000000.0) * frequency;
             }
 
