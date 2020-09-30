@@ -5,15 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(DEFAULT_COMPILE_OPTIONS -Wall -Wextra -Wpedantic -Werror -O3 -march=native -mtune=native)
 
-include(FetchContent)
-
-FetchContent_Declare(
-        gsl
-        GIT_REPOSITORY https://github.com/microsoft/GSL
-        GIT_TAG v3.1.0
-)
-FetchContent_MakeAvailable(gsl)
-
+find_package(Microsoft.GSL REQUIRED)
 
 add_library(I2C src/Bus.cpp src/PCA9685.cpp src/ServoHat.cpp)
 target_include_directories(I2C
